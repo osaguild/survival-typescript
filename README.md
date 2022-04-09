@@ -11,6 +11,19 @@ learning for https://typescriptbook.jp/
 ### install typescript
 - `npm install -g typescript`
 - `tsc -v`
+
+### install yarn
+- `brew install yarn`
   
-## run javascript
+## command
+
+### run javascript
 - `node increment.js`
+
+### compile typescript
+- `tsc increment.ts`
+
+### react
+- `npx create-react-app like-button --template typescript`
+- `cd like-buttonn`
+- `yarn start`
