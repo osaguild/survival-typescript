@@ -14,6 +14,9 @@ learning for https://typescriptbook.jp/
 
 ### install yarn
 - `brew install yarn`
+
+### install ts-node
+- `npm install -g ts-node`
   
 ## command
 
@@ -22,6 +25,9 @@ learning for https://typescriptbook.jp/
 
 ### compile typescript
 - `tsc increment.ts`
+
+### run typscript directry
+- `ts-node increment.ts`
 
 ### react
 - `npx create-react-app like-button --template typescript`
