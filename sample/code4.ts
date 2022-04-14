@@ -1,3 +1,5 @@
+import { addAbortSignal } from "stream";
+
 // array
 let array: number[];
 array = [1, 2, 3];
@@ -257,3 +259,164 @@ console.log(numberOrUndefined);
 const code404: ErrorCode = 404;
 console.log(code404);
 //const code500: errorCode = 500; // error TS2552: Cannot find name 'errorCode'. Did you mean 'ErrorCode'?
+type List5 = string | number[];
+type List6 = (string | number)[];
+const a1: List5 = "ok";
+const a2: List5 = [1, 2, 3];
+//const a3: List5 = ["ok", "ng"]; // error TS2322: Type 'string[]' is not assignable to type 'List5'.
+//const b1: List6 = "ok"; // error TS2322: Type 'string' is not assignable to type 'List6'.
+const b2: List6 = [1, 2, 3];
+const b3: List6 = ["ok", "ng"];
+
+const mayBeUserId: string | null = null;
+if (typeof mayBeUserId === "string") {
+  const userId = mayBeUserId;
+}
+
+type UploadStatus = Inprogress | Success | Failure;
+type Inprogress = {done: boolean; progress: number};
+type Success = {done: boolean};
+type Failure = {done: boolean; error: Error};
+function PrintStatus(status: UploadStatus) {
+  if (status.done === false && "progress" in status) {
+    console.log(`アップロード中:${status.progress}%`);
+  } else if (status.done === true && "error" in status) {
+    console.log(`失敗:${status.error.message}`);
+  } else {
+    console.log("成功");
+  }
+}
+const inporgress: Inprogress = {done: false, progress: 50};
+const success: Success = {done: true};
+const failure: Failure = {done: true, error: new Error("xxx exception")};
+PrintStatus(inporgress);
+PrintStatus(success);
+PrintStatus(failure);
+
+type OkOrBadRequest =
+  | {statusCode: 200; value: string}
+  | {statusCode: 400; message: string};
+function handleResponse(x: OkOrBadRequest) {
+  if (x.statusCode === 200) {
+    console.log(x.value);
+  } else {
+    console.log(x.message);
+  }
+}
+const okRequest: OkOrBadRequest = {statusCode: 200, value: "ok"};
+const badRequest: OkOrBadRequest = {statusCode: 400, message: "bad request"};
+handleResponse(okRequest);
+handleResponse(badRequest);
+
+type Shape =
+  | {type: "circle"; color: string; radius: number}
+  | {type: "square"; color: string; size: number};
+function toCSS(shape: Shape) {
+  switch (shape.type) {
+    case "circle":
+      return {
+        backgroundColor: shape.color,
+        borderRadius: shape.radius,
+      };
+    case "square":
+      return {
+        backgroundColor: shape.color,
+        borderRadius: shape.size,
+      };
+  }
+}
+const circle: Shape = {type: "circle", color: "red", radius: 100};
+const square: Shape = {type: "square", color: "blue", size: 100};
+console.log(toCSS(circle));
+console.log(toCSS(square));
+
+// intersection type
+type TwoDimensionalPoint = {
+  x: number;
+  y: number;
+};
+type Z = {
+  z: number;
+};
+type ThreeDimensionalPoint = TwoDimensionalPoint & Z;
+const p: ThreeDimensionalPoint = {
+  x: 1,
+  y: 2,
+  z: 3,
+};
+type Never = string & number;
+//const n: Never = "never"; // error TS2322: Type 'string' is not assignable to type 'never'.
+type Parameter = {
+  id: string;
+  index?: number;
+  active: boolean;
+  age?: number;
+}
+const param1: Parameter = {
+  id: "id",
+  index: 1,
+  active: true,
+  age:  20,
+}
+const param2: Parameter = {
+  id: "id",
+  active: true,
+}
+
+// type alias
+//type String = string; // error TS2300: Duplicate identifier 'String'.
+type OK = 200;
+type Numbers = number[];
+type UserObject = { id: number; name: string };
+type NumberOrNull = number | null;
+type CallbackFunction = (value: string) => boolean;
+const num6: Numbers = [1, 2, 3];
+const user: UserObject = {id: 1, name: "taro"};1
+const num7: NumberOrNull = null;
+const callback: CallbackFunction = function (value: string) {
+  return true;
+}
+console.log(callback("ok"));
+const callback1: CallbackFunction = (value: string) => false;
+console.log(callback1("false"));
+
+// type assertion
+const value: string | number = "this is string";
+const strLength: number = (value as string).length;
+const strLength1: number = (<string>value).length;
+//const num8: number = 123 as string; // error TS2352: Conversion of type 'number' to type 'string' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+const num8: number = "123" as unknown as number;
+const pikachu = {
+  name: "pikachu",
+  no: 25,
+} as const;
+//pikachu.name = "raichu"; // error TS2540: Cannot assign to 'name' because it is a read-only property.
+let num9!: number;
+initNum();
+console.log(num9 * 2);
+function initNum() {
+  num9 = 2;
+}
+class Foo {
+  num1: number = 1;
+  num2: number;
+  num3!: number; // error TS2564: Property 'num3' has no initializer and is not definitely assigned in the constructor.
+
+  constructor() {
+    this.num2 = 2;
+    this.initNum();
+  }
+
+  initNum() {
+    this.num3 = 3;
+  }
+}
+
+// type of
+console.log(typeof true, typeof 0, typeof "hello world", typeof undefined, typeof null,
+  typeof Symbol(), typeof 1n, typeof [1,2,3], typeof {a:1,b:2});
+
+function isObject(value : unknown) {
+  return typeof value !== null && typeof value === "object";
+}
+console.log(isObject(null));
